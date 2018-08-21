@@ -27,10 +27,3 @@
 
 * [Gradle Plugin](https://github.com/liquibase/liquibase-gradle-plugin)
 * [Hibernate Plugin](https://github.com/liquibase/liquibase-hibernate)
-
-### PTT Crawler
-
-* http://wannadoitnow.blogspot.com/2015/12/java-ptt-client-1.html
-* https://theasciicode.com.ar/extended-ascii-code/black-square-ascii-code-254.html
-* http://bluesock.org/~willg/dev/ansi.html
-* https://github.com/g21589/PTTCrawler
