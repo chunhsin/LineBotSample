@@ -1,0 +1,67 @@
+version: "3.3"
+services:
+  mysql:
+    image: mysql:5.6
+    restart: always
+    container_name: line-bot-mysql
+    hostname: line-bot-mysql
+    privileged: true
+    networks:
+      - overlay
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+    volumes:
+      - ./db/mysql/initsql-prod:/docker-entrypoint-initdb.d:ro
+    ports:
+      - 3306:3306
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  line-bot-jar:
+    build:
+      context: ./jar
+    image: line-bot-jar:latest
+    container_name: line-bot-jar
+    volumes:
+      - type: volume
+        source: jardata
+        target: /opt/line-bot
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+  line-bot-runtime:
+    build:
+      context: ./runtime
+    image: line-bot-runtime:latest
+    container_name: line-bot-runtime
+    hostname: line-bot-runtime
+    restart: always
+    privileged: true
+    networks:
+      - overlay
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+    volumes:
+      - "jardata:/opt/line-bot"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+
+volumes:
+  jardata:
+
+networks:
+  overlay:

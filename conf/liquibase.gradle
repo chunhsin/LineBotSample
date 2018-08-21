@@ -1,0 +1,32 @@
+dependencies {
+    // All of your normal project dependencies would be here in addition to...
+    liquibaseRuntime 'org.liquibase:liquibase-core:3.6.2'
+    liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate5:3.6'
+    liquibaseRuntime 'mysql:mysql-connector-java:5.1.34'
+    liquibaseRuntime 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+}
+
+liquibase {
+
+    activities {
+
+        diffMain {
+            classpath "${project.rootDir}/build/classes/java/main"
+            File propsFile = new File("${project.rootDir}/src/main/resources/application.properties")
+            Properties properties = new Properties()
+            properties.load(new FileInputStream(propsFile))
+            def changeLogPath = "src/main/resources/db/changelog/${new Date().format("yyyyMMddHHmmss")}_changelog.xml"
+            changeLogFile changeLogPath
+            url properties['spring.datasource.url']
+            username properties['spring.datasource.username']
+            password properties['spring.datasource.password']
+            driver properties['spring.datasource.driver-class-name']
+            referenceUrl 'hibernate:spring:ic.jms.bot.domain?dialect=org.hibernate.dialect.MySQLDialect&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
+        }
+    }
+
+}
+
+
+diffChangeLog.dependsOn('build')
